@@ -49,7 +49,7 @@ app.post('/', function (req, res) {
 	if (!fs.existsSync(dir)) {
 		fs.mkdirSync(dir);
 	}
-	const path = Path.join(dir, 'backup.zip');
+	const path = Path.join(dir, `backup_${req.ip}_${Math.floor(Date.now() / 1000)}.zip`);
 	var buffer = Buffer.from(req.body.file.data);
 	if (req.body.file.data.length === 0) {
 		return res.json({
