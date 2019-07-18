@@ -10,7 +10,9 @@ const cors = require('cors');
 const Path = require('path');
 
 app.use(cors());
-app.use(bodyParser.json());
+app.use(bodyParser.json({
+	limit: '50mb'
+}));
 
 const discover = Discover({}, (e) => {
 	if (e) {
@@ -18,6 +20,11 @@ const discover = Discover({}, (e) => {
 		return;
 	}
 	discover.promote();
+	console.log("Hello Discover");
+	discover.eachNode(node => {
+		const url = `http://${node.address}:${node.advertisement}`;
+		console.log("Hello " + url);
+	});
 });
 
 const args = process.argv.slice(2)
@@ -28,19 +35,26 @@ if (args.length) {
 		ignoreInitial: true,
 	});
 	watcher.on('add', (filePath) => {
-		const file = fs.readFileSync(filePath);
-		const body = {
-			file
-		};
+		console.log("file added => " + filePath + " .... waiting for 5 sec!");
+		setTimeout(() => {
+			const file = fs.readFileSync(filePath);
+			const body = {
+				file
+			};
 
-		const filename = Path.basename(filePath);
+			const filename = Path.basename(filePath);
 
-		discover.eachNode(node => {
-			const url = `http://${node.address}:${node.advertisement}`;
-			axios.post(url, body)
-				.then(() => console.log(`Sending ${filename} to ${url} successfully`))
-				.catch(err => console.error(err.message));
-		});
+			console.log("File '" + filename + "' size is " + ((file.byteLength) / 1000) + " KB");
+
+			discover.eachNode(node => {
+				const url = `http://${node.address}:${node.advertisement}`;
+				console.log("sending to " + url);
+				axios.post(url, body)
+					.then(() => console.log(`Sending ${filename} to ${url} successfully`))
+					.catch(err => console.error(err.message));
+			});
+		}, 5000);
+
 	});
 }
 
