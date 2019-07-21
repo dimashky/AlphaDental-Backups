@@ -1,0 +1,8 @@
+{
+	"delete_file_old_than": 2,
+	"backup_folder": "test",
+	"destination_folders": [
+		"\\\\10.0.0.100\\adbackup",
+		"test2"
+	]
+}

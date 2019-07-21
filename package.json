@@ -17,8 +17,10 @@
     "cote": "^0.20.0",
     "diont": "^0.9.7",
     "express": "^4.17.1",
+    "line-reader": "^0.4.0",
     "moment": "^2.24.0",
     "multer": "^1.4.1",
-    "node-discover": "^1.0.0"
+    "node-discover": "^1.0.0",
+    "rimraf": "^2.6.3"
   }
 }
